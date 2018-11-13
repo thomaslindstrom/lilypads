@@ -1,0 +1,43 @@
+{
+    "name": "lilypads",
+    "version": "1.0.0",
+    "description": "Memoized functions done right",
+    "main": "index.js",
+    "repository": "https://github.com/thomaslindstrom/lilypads",
+    "author": "Thomas Lindstrøm <t@hom.as>",
+    "scripts": {
+        "test": "jest --coverage",
+        "lint": "xo"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@amphibian/cache": "^2.1.3",
+        "@amphibian/is-number": "^1.0.1",
+        "@amphibian/party": "^1.0.2"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint-config-amphibian": "^1.1.2",
+        "jest": "^23.6.0",
+        "xo": "^0.23.0"
+    },
+    "xo": {
+        "parser": "babel-eslint",
+        "extends": [
+            "eslint-config-amphibian"
+        ],
+        "rules": {
+            "no-async-promise-executor": 1,
+            "promise/param-names": 1
+        },
+        "overrides": [
+            {
+                "files": "test.js",
+                "globals": [
+                    "test",
+                    "expect"
+                ]
+            }
+        ]
+    }
+}
