@@ -22,7 +22,7 @@ In addition to this, `lilypads` has `@amphibian/party` built in, which ensures m
 import lilypads from 'lilypads';
 import {slowGetUserData} from './interfaces/user';
 
-export default async function optimizedGetUserData(userId) {
+export default function optimizedGetUserData(userId) {
     return lilypads({
         id: `optimizedGetUserData/${userId}`,
         lifetime: 5 * 60 * 1000 // 5 minutes
@@ -66,7 +66,7 @@ function slowGetUserData(userId) {
     return {user: 'test'};
 }
 
-async function optimizedGetUserData(userId) {
+function optimizedGetUserData(userId) {
     return lilypads(context, {
 		id: `optimizedGetUserData/${userId}`
 	}, () => getUserData(userId));
@@ -155,7 +155,7 @@ function getUser(userId, options) {
     }, () => getUserDataFromDatabase(userId));
 }
 
-function updateUser(userId) {
+async function updateUser(userId) {
 	await updateUserInDatabase(userId, {email: 'test@bazinga.com'});
 	invalidate(`my-invalidation-logic/${userId}`);
     return getUser(userId);
