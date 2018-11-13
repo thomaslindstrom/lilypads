@@ -1,6 +1,6 @@
 {
     "name": "lilypads",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Memoized functions done right",
     "main": "index.js",
     "repository": "https://github.com/thomaslindstrom/lilypads",
