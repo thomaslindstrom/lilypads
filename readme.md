@@ -8,11 +8,11 @@ npm install lilypads
 
 ## Why, and what it does
 
-I found myself writing a lot of _optimised handler functions_ that were repeating a lot of the optimization techniques over and over again. This module does it for you.
+I found myself writing a lot of _optimised handler functions_ that were repeating a lot of the optimization techniques over and over again. This module does all of that for you.
 
 Provided a unique `id`, `lilypads` will, after the first call, ensure immediate function responses.
 
-Upon an initial first call with the `id` `user-34134-data`, it will get the data from the provided `responder` function. However, next time the same request is made, `lilypads` will naively, immediately, send the same result as it got from the `responder` function earlier. 
+Upon an initial first call with the `id` `user-34134-data`, it will get the data from the provided `responder` function. However, next time the same request is made, `lilypads` will naively and immediately send the same result as it got from the `responder` function earlier.
 
 In addition to this, `lilypads` has `@amphibian/party` built in, which ensures multiple calls to what would give the same response only trigger the `responder` function once.
 
