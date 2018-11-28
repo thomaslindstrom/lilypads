@@ -114,6 +114,39 @@ try {
 // ...
 ```
 
+To ensure an error is *always* thrown, use `lilypads.ForceThrowError`:
+
+```javascript
+let shouldError = false;
+
+function slowGetUserData(userId) {
+    if (shouldError) {
+        throw new lilypads.ForceThrowError();
+    }
+
+    shouldError = true;
+    return {user: 'test'};
+}
+
+function optimizedGetUserData(userId) {
+    return lilypads(context, {
+		id: `optimizedGetUserData/${userId}`
+	}, () => getUserData(userId));
+}
+
+(async () => {
+    await optimizedGetUserData('1');
+    await optimizedGetUserData('1');
+})();
+```
+
+This time, an error _will_ be thrown, even if the previous `responder` function had a successful run. Both of these approaches will work:
+
+```javascript
+throw new lilypads.ForceThrowError();
+throw new lilypads.ForceThrowError(new Error('my error'));
+```
+
 #### A note on cache invalidation
 
 Sometimes you make changes in your, ie., database that you would like to reflect immediately. There's an option to force update a `lilypad` in the `options` object: `forceUpdate`.

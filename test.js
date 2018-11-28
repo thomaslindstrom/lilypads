@@ -487,3 +487,61 @@ test('should throw when forceUpdate is synchronous and no previous responder was
 		expect(error.message).toBe('test');
 	})
 ));
+
+test('should throw if ForceThrowError is thrown when updating the responder fails during sync', async () => {
+	const id = randomString();
+	const lifetime = 500;
+	const body = 'hello';
+	let tried = false;
+
+	const firstLilypad = await lilypads({id, lifetime}, () => body);
+	expect(firstLilypad).toBe(body);
+
+	return expectToThrow(() => (
+		lilypads({id, lifetime, forceUpdate: 'sync'}, async () => {
+			await delay(250);
+			tried = true;
+			throw new lilypads.ForceThrowError('test');
+		})
+	), (error) => {
+		expect(error.message).toBe('test');
+		expect(error.name).toBe('ForceThrowError');
+		expect(error instanceof lilypads.ForceThrowError).toBe(true);
+	});
+});
+
+test('should throw when forceUpdate is synchronous and a ForceThrowError is thrown', () => (
+	expectToThrow(() => (
+		lilypads({
+			id: randomString(),
+			forceUpdate: 'sync'
+		}, () => {
+			throw new lilypads.ForceThrowError('test');
+		})
+	), (error) => {
+		expect(error.message).toBe('test');
+		expect(error.name).toBe('ForceThrowError');
+		expect(error instanceof lilypads.ForceThrowError).toBe(true);
+	})
+));
+
+test('should throw when forceUpdate is synchronous and a ForceThrowError is thrown with an error as input', () => (
+	expectToThrow(() => (
+		lilypads({
+			id: randomString(),
+			forceUpdate: 'sync'
+		}, () => {
+			const inputError = new Error('test');
+			inputError.key = 'testkey';
+			inputError.code = 'testcode';
+			throw new lilypads.ForceThrowError(inputError);
+		})
+	), (error) => {
+		expect(error.message).toBe('test');
+		expect(error.code).toBe('testcode');
+		expect(error.key).toBe('testkey');
+		expect(error.name).toBe('ForceThrowError');
+		expect(error instanceof lilypads.ForceThrowError).toBe(true);
+	})
+));
+

@@ -5,6 +5,25 @@ const parties = require('@amphibian/party');
 const CACHE_LIFETIME = 6 * 60 * 60 * 1000; // 6 hours
 const lilypadsCache = createCache();
 
+class ForceThrowError extends Error {
+	constructor(message) {
+		super();
+
+		if (message instanceof Error) {
+			this.message = message.message;
+			this.stack = message.stack;
+
+			for (var property in message) {
+				this[property] = message[property];
+			}
+		} else {
+			this.message = message;
+		}
+
+		this.name = 'ForceThrowError';
+	}
+}
+
 /**
  * Lilypads. Function memoization done right
  * @param {object} options - the options object
@@ -82,6 +101,11 @@ function lilypads(options, responder, errorHandler) {
 							errorHandler(error);
 						}
 
+						if (error instanceof ForceThrowError) {
+							rejectParty(error);
+							return;
+						}
+
 						if (synchronous && cache.fresh()) {
 							delete options.forceUpdate;
 							resolveParty(lilypads(options, responder, errorHandler));
@@ -90,6 +114,7 @@ function lilypads(options, responder, errorHandler) {
 
 						if (!lilypad.isResolved) {
 							rejectParty(error);
+							return;
 						}
 					}
 
@@ -106,4 +131,5 @@ function lilypads(options, responder, errorHandler) {
 	});
 }
 
+lilypads.ForceThrowError = ForceThrowError;
 module.exports = lilypads;
