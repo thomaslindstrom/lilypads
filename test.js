@@ -1,5 +1,7 @@
 const lilypads = require('.');
 
+lilypads.logging = true;
+
 /**
  * Expect a function to throw
  * @param {function} test - the test function
@@ -504,6 +506,7 @@ test('should throw if ForceThrowError is thrown when updating the responder fail
 			throw new lilypads.ForceThrowError('test');
 		})
 	), (error) => {
+		expect(tried).toBe(true);
 		expect(error.message).toBe('test');
 		expect(error.name).toBe('ForceThrowError');
 		expect(error instanceof lilypads.ForceThrowError).toBe(true);

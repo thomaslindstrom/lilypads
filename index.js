@@ -13,7 +13,7 @@ class ForceThrowError extends Error {
 			this.message = message.message;
 			this.stack = message.stack;
 
-			for (var property in message) {
+			for (const property in message) {
 				this[property] = message[property];
 			}
 		} else {
@@ -34,8 +34,10 @@ class ForceThrowError extends Error {
 **/
 function lilypads(options, responder, errorHandler) {
 	return new Promise(async (resolve, reject) => {
+		const startTimestamp = Date.now();
+		const {id, lifetime} = options;
+
 		try {
-			const {id, lifetime} = options;
 			const cache = lilypadsCache.open(id);
 			const forceUpdate = Boolean(options.forceUpdate);
 			const synchronous = options.forceUpdate === 'sync';
@@ -57,6 +59,10 @@ function lilypads(options, responder, errorHandler) {
 				if (!lilypad.isResolved) {
 					lilypad.isResolved = true;
 					resolve(lilypad.response);
+
+					if (lilypads.logging === true) {
+						console.log(id, 'resolved from cache after', `${Date.now() - startTimestamp}ms`);
+					}
 				}
 
 				if (!forceUpdate) {
@@ -102,6 +108,10 @@ function lilypads(options, responder, errorHandler) {
 						}
 
 						if (error instanceof ForceThrowError) {
+							if (lilypads.logging === true) {
+								console.log(id, 'force throw from responder after', `${Date.now() - startTimestamp}ms`, error);
+							}
+
 							rejectParty(error);
 							return;
 						}
@@ -113,9 +123,17 @@ function lilypads(options, responder, errorHandler) {
 						}
 
 						if (!lilypad.isResolved) {
+							if (lilypads.logging === true) {
+								console.log(id, 'throw from responder after', `${Date.now() - startTimestamp}ms`, error);
+							}
+
 							rejectParty(error);
 							return;
 						}
+					}
+
+					if (lilypads.logging === true) {
+						console.log(id, 'set/updated after', `${Date.now() - startTimestamp}ms`);
 					}
 
 					resolveParty(lilypad.response);
@@ -123,13 +141,25 @@ function lilypads(options, responder, errorHandler) {
 			);
 
 			if (!lilypad.isResolved) {
-				return resolve(host);
+				const result = await host;
+
+				if (lilypads.logging === true) {
+					console.log(id, 'resolved after', `${Date.now() - startTimestamp}ms`);
+				}
+
+				return resolve(result);
 			}
 		} catch (error) {
+			if (lilypads.logging === true) {
+				console.log(id, 'rejected after', `${Date.now() - startTimestamp}ms`);
+			}
+
 			reject(error);
 		}
 	});
 }
 
 lilypads.ForceThrowError = ForceThrowError;
+lilypads.logging = false;
+
 module.exports = lilypads;
