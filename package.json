@@ -3,11 +3,13 @@
     "version": "1.2.0",
     "description": "Memoized functions done right",
     "main": "index.js",
+    "browser": "index.browser.js",
     "repository": "https://github.com/thomaslindstrom/lilypads",
     "author": "Thomas Lindstrøm <t@hom.as>",
     "scripts": {
         "test": "jest --coverage",
-        "lint": "xo"
+        "lint": "xo",
+        "build": "node build.js"
     },
     "license": "MIT",
     "dependencies": {
@@ -16,8 +18,12 @@
         "@amphibian/party": "^1.0.2"
     },
     "devDependencies": {
+        "@babel/core": "^7.4.3",
+        "@babel/plugin-transform-runtime": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
         "babel-eslint": "^10.0.1",
         "eslint-config-amphibian": "^1.1.2",
+        "fs-extra": "^7.0.1",
         "jest": "^23.6.0",
         "xo": "^0.23.0"
     },
@@ -33,9 +39,8 @@
         "overrides": [
             {
                 "files": "test.js",
-                "globals": [
-                    "test",
-                    "expect"
+                "envs": [
+                    "jest"
                 ]
             }
         ]
