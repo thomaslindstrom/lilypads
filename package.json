@@ -15,7 +15,8 @@
     "dependencies": {
         "@amphibian/cache": "^2.1.3",
         "@amphibian/is-number": "^1.0.1",
-        "@amphibian/party": "^1.0.2"
+        "@amphibian/party": "^1.0.2",
+        "@babel/runtime-corejs2": "^7.4.5"
     },
     "devDependencies": {
         "@babel/core": "^7.4.3",
