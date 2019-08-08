@@ -1,6 +1,6 @@
 {
     "name": "lilypads",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "description": "Memoized functions done right",
     "main": "index.js",
     "browser": "index.browser.js",
