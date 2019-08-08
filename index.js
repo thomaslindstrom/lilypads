@@ -14,7 +14,11 @@ class ForceThrowError extends Error {
 			this.stack = message.stack;
 
 			for (const property in message) {
-				this[property] = message[property];
+				try {
+					this[property] = message[property];
+				} catch (error) {
+					// ... do nothing
+				}
 			}
 		} else {
 			this.message = message;
